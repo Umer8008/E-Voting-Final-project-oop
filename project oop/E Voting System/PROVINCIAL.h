@@ -66,4 +66,5 @@ public:
     bool check_dual_nationality(string a);
     void increment_vote(string a)override;
     void create_election(string a)override;
+    void view_result(string a)override;
 };

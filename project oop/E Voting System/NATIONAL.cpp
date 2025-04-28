@@ -889,6 +889,84 @@ bool NATIONAL::check_dual_nationality(string a)
 
 void NATIONAL::increment_vote(string a)
 {
+	string t = "F:\\project oop\\Data Base\\Election timings\\timings.txt";
+
+	ifstream e1(t);
+	while (getline(e1, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		getline(s, col4, ',');
+		getline(s, col5, ',');
+		getline(s, col6, ',');
+		getline(s, col7, ',');
+		getline(s, col8, ',');
+		getline(s, col9, ',');
+		getline(s, col10, ',');
+		getline(s, col11, ',');
+		getline(s, col12, ',');
+		getline(s, col13, ',');
+		if (col1 == "national")
+		{
+			start_year = stoi(col2);
+			start_month = stoi(col3);
+			start_day = stoi(col4);
+			start_hour = stoi(col5);
+			start_min = stoi(col6);
+			start_sec = stoi(col7);
+			end_year = stoi(col8);
+			end_month = stoi(col9);
+			end_day = stoi(col10);
+			end_hour = stoi(col11);
+			end_min = stoi(col12);
+			end_sec = stoi(col13);
+		}
+	}
+	e1.close();
+
+	if (start_year == 0 || start_month == 0 || start_day == 0 ||
+		end_year == 0 || end_month == 0 || end_day == 0)
+	{
+		cout << "Election not started yet !!!" << endl;
+		return;
+	}
+	else
+	{
+		tm start_tm = {}, end_tm = {}, current_tm = {};
+		start_tm.tm_year = start_year - 1900;
+		start_tm.tm_mon = start_month - 1;
+		start_tm.tm_mday = start_day;
+		start_tm.tm_hour = start_hour;
+		start_tm.tm_min = start_min;
+		start_tm.tm_sec = start_sec;
+
+		end_tm.tm_year = end_year - 1900;
+		end_tm.tm_mon = end_month - 1;
+		end_tm.tm_mday = end_day;
+		end_tm.tm_hour = end_hour;
+		end_tm.tm_min = end_min;
+		end_tm.tm_sec = end_sec;
+
+		time_t start_time = mktime(&start_tm);
+		time_t end_time = mktime(&end_tm);
+		time_t current_time = time(nullptr);
+
+			if (start_time == -1 || end_time == -1) {
+				cout << "Error creating time_t for start or end!" << endl;
+				return;
+			}
+
+		if (current_time >= start_time && current_time <= end_time)
+		{
+		}
+	}
+
+
+
+
 	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\national candidate database.txt";
 	party_file = "F:\\project oop\\Data Base\\PARTY\\NATIONAL PARTIES.txt";
 	string c, uni, dis;
@@ -1075,34 +1153,45 @@ void NATIONAL::create_election(string a)
 	}
 	e1.close();
 
-	time_t currentTime = time(nullptr);
-	tm localTime;
-#ifdef _WIN32
-	localtime_s(&localTime, &currentTime);
-#else
-	localtime_r(&currentTime, &localTime);
-#endif
-
-	if (localTime.tm_year + 1900 >= start_year && localTime.tm_year + 1900 <= end_year)
+	if (start_year == 0 || start_month == 0 || start_day == 0 ||
+		end_year == 0 || end_month == 0 || end_day == 0)
 	{
-		if (localTime.tm_mon + 1 >= start_month && localTime.tm_mon + 1 <= end_day)
-		{
-			if (localTime.tm_mday >= start_day && localTime.tm_mday <= end_day)
-			{
-				if (localTime.tm_hour >= start_hour && localTime.tm_hour <= end_hour)
-				{
-					if (localTime.tm_min >= start_min && localTime.tm_min <= end_min)
-					{
-						if (localTime.tm_sec >= start_sec && localTime.tm_sec <= end_sec)
-						{
-							cout << "National Election is already started !!!" << endl;
-							return;
-						}
-					}
-				}
+	}
+	else
+	{
+		tm start_tm = {}, end_tm = {}, current_tm = {};
+		start_tm.tm_year = start_year - 1900;
+		start_tm.tm_mon = start_month - 1;
+		start_tm.tm_mday = start_day;
+		start_tm.tm_hour = start_hour;
+		start_tm.tm_min = start_min;
+		start_tm.tm_sec = start_sec;
+
+		end_tm.tm_year = end_year - 1900;
+		end_tm.tm_mon = end_month - 1;
+		end_tm.tm_mday = end_day;
+		end_tm.tm_hour = end_hour;
+		end_tm.tm_min = end_min;
+		end_tm.tm_sec = end_sec;
+
+		time_t start_time = mktime(&start_tm);
+		time_t end_time = mktime(&end_tm);
+		time_t current_time = time(nullptr);
+
+		if (start_time == 0)
+
+			if (start_time == -1 || end_time == -1) {
+				cout << "Error creating time_t for start or end!" << endl;
+				return;
 			}
+
+		if (current_time >= start_time && current_time <= end_time)
+		{
+			cout << "Election is already started." << endl;
+			return;
 		}
 	}
+
 	start_election();
 	end_election();
 
@@ -1128,7 +1217,6 @@ void NATIONAL::create_election(string a)
 	remove(t.c_str());
 	rename("F:\\project oop\\Data Base\\Election timings\\temp.txt", t.c_str());
 
-	//voter false
 
 	ifstream a2(user_file);
 	ofstream a3("F:\\project oop\\Data Base\\temp.txt");
@@ -1159,4 +1247,85 @@ void NATIONAL::create_election(string a)
 	p9.close();
 	p8.close();
 	remove("F:\\project oop\\Data Base\\temp.txt");
+
+	ofstream out3("F:\\project oop\\Data Base\\CANDIDATE\\national candidate database.txt");
+	out3.close();
+}
+
+void NATIONAL::view_result(string a)
+{
+	string ab;int total = 0, h1 = 0;
+
+	ifstream m1(Nadra_file);
+	while (getline(m1, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3, col4, col5, col6, col7, col8, col9;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		getline(s, col4, ',');
+		getline(s, col5, ',');
+		getline(s, col6, ',');
+		getline(s, col7, ',');
+		getline(s, col8, ',');
+		getline(s, col9, ',');
+		if (col5 == a)
+		{
+			ab = col9;
+			break;
+		}
+	}
+	m1.close();
+
+	cout << "Candidate  PARTY  Votes  Percentage " << endl;
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\national candidate database.txt";
+
+	ifstream m3(candidate_file);
+	while (getline(m3, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3, col4, col5, col6, col7;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		getline(s, col4, ',');
+		getline(s, col5, ',');
+		getline(s, col6, ',');
+		getline(s, col7, ',');
+		if (col5 == ab)
+		{
+			h1++;
+			total += stoi(col7);
+		}
+	}
+	m3.close();
+	if (h1 != 0)
+	{
+		if (total != 0)
+		{
+			ifstream m2(candidate_file);
+			while (getline(m2, line))
+			{
+				stringstream s(line);
+				string col1, col2, col3, col4, col5, col6, col7;
+				getline(s, col1, ',');
+				getline(s, col2, ',');
+				getline(s, col3, ',');
+				getline(s, col4, ',');
+				getline(s, col5, ',');
+				getline(s, col6, ',');
+				getline(s, col7, ',');
+				if (col5 == ab)
+				{
+					cout << col1 << "  " << col6 << "  " << col7 << "  " << ((stoi(col7)) / total) * 100 << endl;
+				}
+			}
+			m2.close();
+		}
+		else
+			cout << "Not any vote to " << h1 << " candidates !!!" << endl;
+	}
+	else
+		cout << "Not any candidate stand in the " << ab << " !!!" << endl;
 }

@@ -8,6 +8,7 @@
 #include"NATIONAL.h"
 #include"LOCAL.h"
 #include"PROVINCIAL.h"
+
 using namespace std;
 
 void VOTER::interfaces(string a)
@@ -98,5 +99,47 @@ void VOTER::cast_vote(string a)
 
 void VOTER::view_update(string a)
 {
+	while (true) {
+		cout << "\tView Result\n";
+		cout << "1. Local Election\n";
+		cout << "2. Provincial Election\n";
+		cout << "3. National Election\n";
+		cout << "4. Exit\n";
+		cout << "Enter Choice :";
+		while (true) {
+			cin >> choice;
+			if (cin.fail())
+			{
+				cin.clear();
+				cin.ignore(1000, '\n');
+				cout << "Enter number between 1 and 4 :";
+			}
+			else if (choice > 4 || choice < 1)
+				cout << "Enter number between 1 and 4 :";
+			else
+				break;
+		}
 
+		ELECTION* e;
+		if (choice == 1)
+		{
+			LOCAL l;
+			e = &l;
+			e->view_result(a);
+		}
+		else if (choice == 2)
+		{
+			PROVINCIAL l;
+			e = &l;
+			e->view_result(a);
+		}
+		else if (choice == 3)
+		{
+			NATIONAL y;
+			e = &y;
+			e->view_result(a);
+		}
+		else
+			return;
+	}
 }

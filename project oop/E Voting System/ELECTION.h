@@ -23,4 +23,5 @@ public:
 	void start_election();
 	void end_election();
 	virtual void create_election(string a) = 0;
+	virtual void view_result(string a) = 0;
 };

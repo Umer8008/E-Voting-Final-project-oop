@@ -205,7 +205,7 @@ void ADMINISTRATOR::modify_candidate()
 
 void ADMINISTRATOR::view_results()
 {
-
+	
 }
 
 void ADMINISTRATOR::create_election()

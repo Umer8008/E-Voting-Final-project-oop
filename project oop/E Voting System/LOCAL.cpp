@@ -1023,6 +1023,105 @@ bool LOCAL::check_study(string a)
 
 void LOCAL::increment_vote(string a)
 {
+	ifstream in23(Nadra_file);
+	while (getline(in23, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3, col4, col5, col6, col7;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		getline(s, col4, ',');
+		getline(s, col5, ',');
+		getline(s, col6, ',');
+		getline(s, col7, ',');
+		if (col5 == a)
+		{
+			a = col7;break;
+		}
+	}
+	in23.close();
+
+
+	string t = "F:\\project oop\\Data Base\\Election timings\\timings.txt";
+	ifstream e1(t);
+	while (getline(e1, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		getline(s, col4, ',');
+		getline(s, col5, ',');
+		getline(s, col6, ',');
+		getline(s, col7, ',');
+		getline(s, col8, ',');
+		getline(s, col9, ',');
+		getline(s, col10, ',');
+		getline(s, col11, ',');
+		getline(s, col12, ',');
+		getline(s, col13, ',');
+		getline(s, col14, ',');
+		if (col1 == "local")
+		{
+			if (col2 == a)
+			{
+				start_year = stoi(col3);
+				start_month = stoi(col4);
+				start_day = stoi(col5);
+				start_hour = stoi(col6);
+				start_min = stoi(col7);
+				start_sec = stoi(col8);
+				end_year = stoi(col9);
+				end_month = stoi(col10);
+				end_day = stoi(col11);
+				end_hour = stoi(col12);
+				end_min = stoi(col13);
+				end_sec = stoi(col14);
+			}
+		}
+	}
+	e1.close();
+
+	if (start_year == 0 || start_month == 0 || start_day == 0 ||
+		end_year == 0 || end_month == 0 || end_day == 0)
+	{
+		cout << "Election not started yet .!!!" << endl;
+	}
+	else
+	{
+		tm start_tm = {}, end_tm = {}, current_tm = {};
+		start_tm.tm_year = start_year - 1900;
+		start_tm.tm_mon = start_month - 1;
+		start_tm.tm_mday = start_day;
+		start_tm.tm_hour = start_hour;
+		start_tm.tm_min = start_min;
+		start_tm.tm_sec = start_sec;
+
+		end_tm.tm_year = end_year - 1900;
+		end_tm.tm_mon = end_month - 1;
+		end_tm.tm_mday = end_day;
+		end_tm.tm_hour = end_hour;
+		end_tm.tm_min = end_min;
+		end_tm.tm_sec = end_sec;
+
+		time_t start_time = mktime(&start_tm);
+		time_t end_time = mktime(&end_tm);
+		time_t current_time = time(nullptr);
+
+
+
+		if (start_time == -1 || end_time == -1) {
+			cout << "Error creating time_t for start or end!" << endl;
+			return;
+		}
+
+		if (current_time >= start_time && current_time <= end_time)
+		{}
+	}
+
+
 	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
 	party_file = "F:\\project oop\\Data Base\\PARTY\\LOCAL PARTIES.txt";
 	user_file = "F:\\project oop\\Data Base\\login.txt";
@@ -1226,34 +1325,44 @@ void LOCAL::create_election(string a)
 	}
 	e1.close();
 
-	time_t currentTime = time(nullptr);
-	tm localTime;
-#ifdef _WIN32
-	localtime_s(&localTime, &currentTime);
-#else
-	localtime_r(&currentTime, &localTime);
-#endif
-
-	if (localTime.tm_year + 1900 >= start_year && localTime.tm_year + 1900 <= end_year)
+	if (start_year == 0 || start_month == 0 || start_day == 0 ||
+		end_year == 0 || end_month == 0 || end_day == 0)
+	{}
+	else
 	{
-		if (localTime.tm_mon + 1 >= start_month && localTime.tm_mon + 1 <= end_day)
-		{
-			if (localTime.tm_mday >= start_day && localTime.tm_mday <= end_day)
-			{
-				if (localTime.tm_hour >= start_hour && localTime.tm_hour <= end_hour)
-				{
-					if (localTime.tm_min >= start_min && localTime.tm_min <= end_min)
-					{
-						if (localTime.tm_sec >= start_sec && localTime.tm_sec <= end_sec)
-						{
-							cout << "Election is already started " << endl;
-							return;
-						}
-					}
-				}
+		tm start_tm = {}, end_tm = {}, current_tm = {};
+		start_tm.tm_year = start_year - 1900;
+		start_tm.tm_mon = start_month - 1;
+		start_tm.tm_mday = start_day;
+		start_tm.tm_hour = start_hour;
+		start_tm.tm_min = start_min;
+		start_tm.tm_sec = start_sec;
+
+		end_tm.tm_year = end_year - 1900;
+		end_tm.tm_mon = end_month - 1;
+		end_tm.tm_mday = end_day;
+		end_tm.tm_hour = end_hour;
+		end_tm.tm_min = end_min;
+		end_tm.tm_sec = end_sec;
+
+		time_t start_time = mktime(&start_tm);
+		time_t end_time = mktime(&end_tm);
+		time_t current_time = time(nullptr);
+
+		if (start_time == 0)
+
+			if (start_time == -1 || end_time == -1) {
+				cout << "Error creating time_t for start or end!" << endl;
+				return;
 			}
+
+		if (current_time >= start_time && current_time <= end_time)
+		{
+			cout << "Election is already started." << endl;
+			return;
 		}
 	}
+
 	start_election();
 	end_election();
 
@@ -1313,6 +1422,25 @@ void LOCAL::create_election(string a)
 	p9.close();
 	p8.close();
 	remove("F:\\project oop\\Data Base\\temp.txt");
+
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
+	ifstream a7(candidate_file);
+	ofstream a8("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt");
+	while (getline(a7, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		if (col3 != a)
+			a8 << line << endl;
+	}
+	a7.close();
+	a8.close();
+
+	remove(candidate_file.c_str());
+	rename("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt", candidate_file.c_str());
 }
 
 void LOCAL::inter()
@@ -1370,5 +1498,95 @@ void LOCAL::inter()
 		create_election(province);
 		return;
 }
+
+void LOCAL::view_result(string a)
+{
+	string ab1, ab2, ab3;int total = 0, h1 = 0;
+	
+	ifstream m1(Nadra_file);
+	while (getline(m1, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		getline(s, col4, ',');
+		getline(s, col5, ',');
+		getline(s, col6, ',');
+		getline(s, col7, ',');
+		getline(s, col8, ',');
+		getline(s, col9, ',');
+		getline(s, col10, ',');
+		getline(s, col11, ',');
+		if (col5 == a)
+		{
+			ab1 = col7;
+			ab2 = col8;
+			ab3 = col11;
+			break;
+		}
+	}
+	m1.close();
+	
+	cout << "Candidate  PARTY  Votes  Percentage " << endl;
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
+
+	ifstream m3(candidate_file);
+	while (getline(m3, line))
+	{
+		stringstream s(line);
+		string col1, col2, col3, col4, col5, col6, col7;
+		getline(s, col1, ',');
+		getline(s, col2, ',');
+		getline(s, col3, ',');
+		getline(s, col4, ',');
+		getline(s, col5, ',');
+		getline(s, col6, ',');
+		getline(s, col7, ',');
+		if (col3 == ab1 && col4 == ab2 && col5 == ab3)
+		{
+			h1++;
+			total += stoi(col7);
+		}
+	}
+	m3.close();
+	if (h1 != 0)
+	{
+		if (total != 0)
+		{
+			ifstream m2(candidate_file);
+			while (getline(m2, line))
+			{
+				stringstream s(line);
+				string col1, col2, col3, col4, col5, col6, col7;
+				getline(s, col1, ',');
+				getline(s, col2, ',');
+				getline(s, col3, ',');
+				getline(s, col4, ',');
+				getline(s, col5, ',');
+				getline(s, col6, ',');
+				getline(s, col7, ',');
+				if (col3 == ab1 && col4 == ab2 && col5 == ab3)
+				{
+					cout << col1 << "  " << col6 << "  " << col7 << "  " << ((stoi(col7)) / total) * 100 << endl;
+				}
+			}
+			m2.close();
+		}
+		else
+			cout << "Not any vote to " << h1 << " candidates !!!" << endl;
+	}
+	else
+		cout << "Not any candidate stand in the" << ab3 << " !!!" << endl;
+}
+
+
+
+
+
+
+
+
 
 

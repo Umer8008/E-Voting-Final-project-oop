@@ -66,5 +66,6 @@ public:
     void increment_vote(string a)override;
     void create_election(string a)override;
     void inter();
+    void view_result(string a)override;
 };
 

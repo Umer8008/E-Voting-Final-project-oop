@@ -4,6 +4,7 @@
 #include<fstream>
 #include<iomanip>
 #include<ctime>
+
 using namespace std;
 
 void ELECTION::start_election()
@@ -17,7 +18,7 @@ void ELECTION::start_election()
 
 	bool a = false;
 	//year
-	cout << "Enter Start Year :";
+	cout << "Enter Start Year of Election:";
 	do {
 		cin >> start_year;
 		if (cin.fail())
@@ -33,36 +34,44 @@ void ELECTION::start_election()
 	} while (!a);
 	//month
 	while (true) {
-		cout << "Enter Month of Birth (1-12): ";
+		cout << "Enter Month of Election (1-12): ";
 		cin >> start_month;
 		if (cin.fail() || start_month < 1 || start_month > 12) {
 			cout << "Invalid input! Month must be between 1 and 12.\n";
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		}
-		else if (start_year == localTime.tm_year + 1900 && start_month <= localTime.tm_mon + 1)
+		else if (start_year == localTime.tm_year + 1900 && start_month < localTime.tm_mon + 1)
 		{
-			cout << "Month cannot be LESS and EQUAL than the current month for this year.\n";
+			cout << "Month cannot be LESS than the current month for this year.\n";
 		}
 		else {
 			break;
 		}
 	}
-	bool isLeapYear = (start_year % 4 == 0 && (start_year % 100 != 0 || start_year % 400 == 0));
 	//day
+	bool isLeapYear = (start_year % 4 == 0 && (start_year % 100 != 0 || start_year % 400 == 0));
 	while (true) {
-		cout << "Enter Day of Birth : ";
+		cout << "Enter Day of Election: ";
 		cin >> start_day;
+
 		if (cin.fail() || start_day < 1 || start_day > 31) {
 			cout << "Invalid input! Day must be between 1 and 31.\n";
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			continue;
 		}
-		else if ((start_month == 2 && start_day > 29) || (start_month == 4 || start_month == 6 || start_month == 9 || start_month == 11) && start_day > 30) {
-			cout << "Invalid day for the given month!\n";
+
+		bool validDay = true;
+		if (start_month == 2) { 
+			if (isLeapYear && start_day > 29) validDay = false;
+			if (!isLeapYear && start_day > 28) validDay = false;
 		}
-		else if ((start_month == 2 && ((isLeapYear && start_day > 29) || (!isLeapYear && start_day > 28))) ||
-			((start_month == 4 || start_month == 6 || start_month == 9 || start_month == 11) && start_day > 30)) {
+		else if (start_month == 4 || start_month == 6 || start_month == 9 || start_month == 11) {
+			if (start_day > 30) validDay = false;
+		}
+
+		if (!validDay) {
 			cout << "Invalid day for the given month!\n";
 		}
 		else {
