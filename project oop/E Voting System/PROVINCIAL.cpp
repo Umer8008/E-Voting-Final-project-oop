@@ -1,19 +1,18 @@
-#include "LOCAL.h"
 #include<iostream>
 #include<string>
 #include<fstream>
 #include<iomanip>
 #include<ctime>
-#include <cstddef>
 #include "ELECTION.h"
 #include"candidate.h"
+#include "PROVINCIAL.h"
 
 using namespace std;
 
-void LOCAL::add_condidate()
+void PROVINCIAL::add_condidate()
 {
-	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
-	party_file = "F:\\project oop\\Data Base\\PARTY\\LOCAL PARTIES.txt";
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\provincial candidate database.txt";
+	party_file = "F:\\project oop\\Data Base\\PARTY\\PROVINCIAL PARTIES.txt";
 	cout << "Enter Cnic :";
 	//check 13 digit cnic
 	while (true)
@@ -32,12 +31,13 @@ void LOCAL::add_condidate()
 				getline(s, col2, ',');
 				if (col2 == cnic)
 				{
-					cout << "You are already candidate.\n";in.close();return;
+					cout << "You are already candidate.\n";found = true;break;
 				}
-				else
-					found = false;
 			}
 			in.close();
+
+			if (found)
+				break;
 			if (!found)
 			{
 				ifstream in(Nadra_file);
@@ -57,8 +57,6 @@ void LOCAL::add_condidate()
 					{
 						found2 = true;break;
 					}
-					else
-						found2 = false;
 				}
 				in.close();
 			}
@@ -72,12 +70,11 @@ void LOCAL::add_condidate()
 
 	if (found)
 		return;
-
 	if (check_pakistani(cnic))
 	{
-		if (check_age(cnic))//check age >=18
+		if (check_age(cnic))
 		{
-			if (check_study(cnic))//check study is matric
+			if (!check_dual_nationality(cnic))//check age >=18
 			{
 				//province
 				int a;
@@ -137,7 +134,7 @@ void LOCAL::add_condidate()
 				//district
 				bool validDistrict = false;
 				while (!validDistrict) {
-					cout << "\nProvince " << province << " of Districts :\n" << endl;
+					cout << "\nProvince" << province << " of Districts :" << endl;
 					if (province == "PUNJAB") {
 						for (int i = 0;i < 38;i++)
 						{
@@ -175,11 +172,10 @@ void LOCAL::add_condidate()
 						}
 					}
 					else if (province == "FEDERAL CAPITAL TERRITORY") {
-						cout << "1.ISLAMABAD CAPITAL TERRITORY" << endl;
+						cout << "1.Islamabad" << endl;
 					}
 					cout << "Enter District: ";
-					cin.ignore(); 
-					getline(cin, district); 
+					cin >> district;
 
 					for (int i = 0; i < district.length(); ++i) {
 						if (district[i] >= 'a' && district[i] <= 'z') {
@@ -231,178 +227,107 @@ void LOCAL::add_condidate()
 						for (int i = 0; i < sizeof(ajkDistricts) / sizeof(ajkDistricts[0]); ++i) {
 							if (district == ajkDistricts[i]) {
 								validDistrict = true;
+								break;
 							}
 						}
 					}
 					else if (province == "FEDERAL CAPITAL TERRITORY") {
-						if (district == "ISLAMABAD CAPITAL TERRITORY") {
-							validDistrict = true;
-						}
-					}
-
-					if ( !validDistrict) {
-						cout << "Invalid district for the selected province. Please try again.\n" << endl;
-					}
-				}
-
-				//union council
-				int index = 1;
-				cout << "\t!!! City of " << district << "!!!\n";
-				if (province == "PUNJAB" || province == "SINDH" || province == "KHYBER PAKHTUNKHWA"
-					|| province == "BALOCHISTAN" || province == "FEDERAL CAPITAL TERRITORY")
-				{
-					ifstream in("F:\\project oop\\Data Base\\pakistan union council.txt");
-					while (getline(in, line)) {
-						stringstream ss(line);
-						string col1, col2;
-
-						getline(ss, col1, ',');
-						getline(ss, col2, ',');
-
-						if (col1 == district) {
-							cout << index << ". " << col2 << endl;
-							index++;
-						}
-					}
-					in.close();
-				}
-				else if (province == "GILGIT-BALTISTAN") {
-					ifstream i("F:\\project oop\\Data Base\\GILGIT.txt");
-					while (getline(i, line))
-					{
-						stringstream s(line);
-						string col1, col2;
-						getline(s, col1, ',');
-						getline(s, col2, ',');
-						if (col1 == district)
-							cout << index << ". " << col2 << endl;index++;
-					}
-					i.close();
-				}
-				else {
-					ifstream i("F:\\project oop\\Data Base\\AJK.txt");
-					while (getline(i, line))
-					{
-						stringstream s(line);
-						string col1, col2;
-						getline(s, col1, ',');
-						getline(s, col2, ',');
-						if (col1 == district)
-							cout << index << col2 << endl;
-					}
-					i.close();
-				}
-				do {
-					if (province == "PUNJAB" || province == "SINDH" || province == "KHYBER PAKHTUNKHWA" || province == "BALOCHISTAN" || province == "FEDERAL CAPITAL TERRITORY")
-					{
-						cout << endl << "Enter City Name from the above list: ";
-						cin >> union_council;
-
-						for (int i = 0; i < union_council.length(); ++i) {
-							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
-								union_council[i] = union_council[i] - 'a' + 'A';
-							}
-						}
-						found = false;
-
-						ifstream in("F:\\project oop\\Data Base\\pakistan union council.txt");
-						while (getline(in, line)) {
-							stringstream ss(line);
-							string col1, col2, col3;
-
-							getline(ss, col1, ',');
-							getline(ss, col2, ',');
-
-							if (col2 == union_council) {
-								found = true;
+						for (int i = 0; i < sizeof(islamabadDistricts) / sizeof(islamabadDistricts[0]); ++i) {
+							if (district == islamabadDistricts[i]) {
+								validDistrict = true;
 								break;
 							}
 						}
-						in.close();
 					}
-					else if (province == "GILGIT-BALTISTAN")
-					{
-						cout << endl << "Enter City Name from the above list: ";
-						cin >> union_council;
 
-						for (int i = 0; i < union_council.length(); ++i) {
-							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
-								union_council[i] = union_council[i] - 'a' + 'A';
-							}
-						}
-						found = false;
-
-						ifstream in("F:\\project oop\\Data Base\\GILGIT.txt");
-						while (getline(in, line)) {
-							stringstream ss(line);
-							string col1, col2;
-
-							getline(ss, col1, ',');
-							getline(ss, col2, ',');
-
-							if (col2 == union_council) {
-								found = true;
-								break;
-							}
-						}
-						in.close();
+					if (validDistrict) {
+						cout << "Valid district in " << province << "!" << endl;
 					}
-					else
-					{
-						cout << endl << "Enter City Name from the above list: ";
-						cin >> union_council;
-
-						for (int i = 0; i < union_council.length(); ++i) {
-							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
-								union_council[i] = union_council[i] - 'a' + 'A';
-							}
-						}
-						found = false;
-
-						ifstream in("F:\\project oop\\Data Base\\AJK.txt");
-						while (getline(in, line)) {
-							stringstream ss(line);
-							string col1, col2, col3, col4, col5, col6;
-
-							getline(ss, col1, ',');
-							getline(ss, col2, ',');
-
-							if (col2 == union_council) {
-								found = true;
-								break;
-							}
-						}
-						in.close();
+					else {
+						cout << "Invalid district for the selected province. Please try again.\n";
 					}
-					if (!found) {
-						cout << "\nUnion Council Not Found! Please try again.\n";
-					}
-				} while (!found);
+				}
 
-				//Party of affiliation
+				//provincial
 				int i = 0;
-				cout << "Parties of " << province << " !!!" << endl;
-				ifstream in(party_file);
+				cout << "\n\tProvincial seats in " << district << endl;
+				ifstream in("F:\\project oop\\Data Base\\provincial election.txt");
 				while (getline(in, line))
 				{
 					stringstream s(line);
-					string col1, col2;
+					string col1, col2, col3;
 					getline(s, col1, ',');
 					getline(s, col2, ',');
-
+					getline(s, col3, ',');
 					if (col1 == province)
 					{
-						cout << i + 1 << ". " << col2 << endl;i++;
+						if (col2 == district)
+						{
+							i++;
+							cout << i << ". " << col3 << endl;
+						}
 					}
 				}
 				in.close();
+				ifstream in5("F:\\project oop\\Data Base\\provincial election.txt");
+				cout << endl;
+				int j = 0;
+				int number;
+				while (true)
+				{
+					cout << "Enter PA # Index :";
+					do {
+						cin >> number;
+						if (number<0 || number > i)
+							cout << "Enter number between 1 and " << i << " : ";
+						else if (cin.fail())
+						{
+							cout << "Enter number between 1 and " << i << " : ";
+							cin.clear();
+							cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						}
+						else
+							break;
+					} while (true);
+					ifstream in("F:\\project oop\\Data Base\\provincial election.txt");
+					while (getline(in, line))
+					{
+						stringstream s(line);
+						string col1, col2, col3;
+						getline(s, col1, ',');
+						getline(s, col2, ',');
+						getline(s, col3, ',');
+						if (col2 == district)
+						{
+							j++;
+							if (j == number)
+								union_council = col3;
+						}
+					}
+					in.close();
+					break;
+				}
+				in5.close();
+
+				//Party of affiliation
+				i = 0;
+				cout << "Parties of " << province << " !!!" << endl;
+				ifstream in6(party_file);
+				while (getline(in, line))
+				{
+					stringstream s(line);
+					string col1;
+					getline(s, col1, ',');
+					cout << i + 1 << col1 << endl;i++;
+				}
+				in6.close();
 				int b;
 				while (true)
 				{
-					while (true) {
+					do {
 						cout << "Enter Party Affiliation :";
 						cin >> b;
-						if (cin.fail() || (b < 1 || b > i))
+						if (cin.fail() || b < 1 || b > i)
 						{
 							cin.clear();
 							cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -410,25 +335,20 @@ void LOCAL::add_condidate()
 						}
 						else
 							break;
-					}
+					} while (cin.fail() || b < 1 || b > i);
 					i = 0;
 					ifstream in(party_file);
 					while (getline(in, line))
 					{
 						stringstream s(line);
-						string col1, col2;
+						string col1;
 						getline(s, col1, ',');
-						getline(s, col2, ',');
 
-						if (col1 == province)
-						{
-							i++;
-							if (i == b)
-								party_affiliation = col2;
-						}
+						i++;
+						if (i == b)
+							party_affiliation = col1;
 					}
 					in.close();
-					break;
 				}
 
 				vote = 0;
@@ -437,33 +357,32 @@ void LOCAL::add_condidate()
 					<< "," << party_affiliation << "," << vote << endl;
 				out.close();
 
-				cout << "\n\tCandidate added successfully!\n" << endl;
+				cout << "\n\tCandidate added successfully!" << endl;
 			}
 			else
 			{
-				cout << "In Local Govt. Study is minimum is matric !!!\n" << endl;return;
+				cout << "\nYou have dual nationality so you are not applicable .\n" << endl;return;
 			}
 		}
 		else
 		{
-			cout << "\tYour age is less than 18.!!!\n" << endl;return;
+			cout << "\nYour age is less than 25.!!!";return;
 		}
 	}
 	else
 	{
-		cout << "You are not Pakistani so you are not applicable .\n\n";return;
-    }
+		cout << "\nYou are not Pakistani so you are not applicable .\n";return;
+	}
 }
 
-void LOCAL::remove_condidate()
+void PROVINCIAL::remove_condidate()
 {
-	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
-	party_file = "F:\\project oop\\Data Base\\PARTY\\LOCAL PARTIES.txt";
-	cout << "Enter Cnic for Remove Candidate :";
-	while (true)
-	{
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\provincial candidate database.txt";
+	party_file = "F:\\project oop\\Data Base\\PARTY\\PROVINCIAL PARTIES.txt";
+	do {
+		cout << "Enter Cnic for Remove Candidate :";
 		do {
-			cin >> cnic;
+			getline(cin, cnic);
 			if (cnic.length() != 13)
 				cout << "Enter 13 digit Cnic :";
 		} while (cnic.length() != 13);
@@ -485,22 +404,46 @@ void LOCAL::remove_condidate()
 		if (found)
 			break;
 		else
-			cout << "Enter Correct Cnic for Candidate :";
-	}
+			cout << "Enter Cnic for Candidate :";
+	} while (true);
 	remove(candidate_file.c_str());
 	rename("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt", candidate_file.c_str());
 	cout << "\nCandidate remove successfully !!!" << endl;
 }
 
-void LOCAL::modify_candidate()
+void PROVINCIAL::modify_candidate()
 {
-	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
-	party_file = "F:\\project oop\\Data Base\\PARTY\\LOCAL PARTIES.txt";
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\provincial candidate database.txt";
+	party_file = "F:\\project oop\\Data Base\\PARTY\\PROVINCIAL PARTIES.txt";
+	time_t currentTime = time(nullptr);
+#ifdef _WIN32
+	tm localTime;localtime_s(&localTime, &currentTime);
+#else
+	tm localTime;localtime_r(&currentTime, &localTime);
+#endif
+
+	int y = localTime.tm_year + 1900;
+	int m = localTime.tm_mon + 1;
+	int d = localTime.tm_mday;
+
+	bool change = false;
+	if (y >= start_year && y <= end_year)
+	{
+		if (m >= start_month && m <= end_month)
+		{
+			if (d >= start_day && d <= end_day)
+				change = true;
+		}
+	}
+	if (change)
+		cout << "Not Modified because Election is Start.";
+	else
+	{
 		int z;
 		cout << "Enter Cnic to Modify :";
 		while (true)
 		{
-			cin >> cnic;
+			getline(cin, cnic);
 			if (cnic.length() != 13)
 				cout << "Enter 13 digit Cnic :";
 			else {
@@ -549,56 +492,49 @@ void LOCAL::modify_candidate()
 			{
 				int i = 0;
 				cout << "Parties of " << province << " !!!" << endl;
-				ifstream in21(party_file);
-				while (getline(in21, line))
+				ifstream in(party_file);
+				while (getline(in, line))
 				{
 					stringstream s(line);
-					string col1, col2;
+					string col1;
 					getline(s, col1, ',');
-					getline(s, col2, ',');
 
-					if (col1 == province)
-					{
-						cout << i + 1 <<". " << col2 << endl;i++;
-					}
+					cout << i + 1 << col1 << endl;i++;
 				}
-				in21.close();
+				in.close();
 				int b;
-				while(true){
-					cout << "Enter Party Affiliation :";
-					cin >> b;
-					if (cin.fail() || b < 1 || b > i)
+				while (true)
+				{
+					do {
+						cout << "Enter Party Affiliation :";
+						cin >> b;
+						if (cin.fail() || b < 1 || b > i)
 						{
 							cin.clear();
 							cin.ignore(numeric_limits<streamsize>::max(), '\n');
 							cout << "Enter between 1 and " << i << endl;
 						}
-					else
-						break;
-					}
-				int j = 0;
-				ifstream in(party_file);
-				while (getline(in, line))
+					} while (cin.fail() || b < 1 || b > i);
+					int j = 0;
+					ifstream in(party_file);
+					while (getline(in, line))
 					{
 						stringstream s(line);
-						string col1, col2;
+						string col1;
 						getline(s, col1, ',');
-						getline(s, col2, ',');
 
-						if (col1 == province)
+						j++;
+						if (j == b)
 						{
-							j++;
-							if (j == b)
-							{
-								party_affiliation = col2;break;
-						    }
+							party_affiliation = col1;break;
 						}
 					}
-				in.close();
+					in.close();
+				}
 
-				ifstream in1(candidate_file);
-				ofstream out("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt",ios::app);
-				while (getline(in1, line))
+				ifstream in7(party_file);
+				ofstream out("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt");
+				while (getline(in, line))
 				{
 					stringstream s(line);
 					string col1, col2, col3, col4, col5, col6, col7;
@@ -616,7 +552,7 @@ void LOCAL::modify_candidate()
 						out << line << endl;
 				}
 				out.close();
-				in1.close();
+				in7.close();
 				remove(candidate_file.c_str());
 				rename("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt", candidate_file.c_str());
 			}
@@ -680,7 +616,7 @@ void LOCAL::modify_candidate()
 				//district
 				bool validDistrict = false;
 				while (!validDistrict) {
-					cout << "\nProvince " << province << " of Districts :\n" << endl;
+					cout << "\nProvince" << province << " of Districts :" << endl;
 					if (province == "PUNJAB") {
 						for (int i = 0;i < 38;i++)
 						{
@@ -718,10 +654,9 @@ void LOCAL::modify_candidate()
 						}
 					}
 					else if (province == "FEDERAL CAPITAL TERRITORY") {
-						cout << "1.ISLAMABAD CAPITAL TERRITORY" << endl;
+						cout << "1.Islamabad" << endl;
 					}
 					cout << "Enter District: ";
-					cin.ignore();
 					getline(cin, district);
 
 					for (int i = 0; i < district.length(); ++i) {
@@ -774,155 +709,90 @@ void LOCAL::modify_candidate()
 						for (int i = 0; i < sizeof(ajkDistricts) / sizeof(ajkDistricts[0]); ++i) {
 							if (district == ajkDistricts[i]) {
 								validDistrict = true;
+								break;
 							}
 						}
 					}
 					else if (province == "FEDERAL CAPITAL TERRITORY") {
-						if (district == "ISLAMABAD CAPITAL TERRITORY") {
-							validDistrict = true;
+						for (int i = 0; i < sizeof(islamabadDistricts) / sizeof(islamabadDistricts[0]); ++i) {
+							if (district == islamabadDistricts[i]) {
+								validDistrict = true;
+								break;
+							}
 						}
 					}
 
-					if (!validDistrict) {
-						cout << "Invalid district for the selected province. Please try again.\n" << endl;
+					if (validDistrict) {
+						cout << "Valid district in " << province << "!" << endl;
+					}
+					else {
+						cout << "Invalid district for the selected province. Please try again.\n";
 					}
 				}
 
-				//union council
-				int index = 1;
-				cout << "\t!!! City of " << district << "!!!\n";
-				if (province == "PUNJAB" || province == "SINDH" || province == "KHYBER PAKHTUNKHWA"
-					|| province == "BALOCHISTAN" || province == "FEDERAL CAPITAL TERRITORY")
+				//provincial
+				int i = 0;
+				cout << "\n\tProvincial seats in " << district << endl;
+				ifstream in("F:\\project oop\\Data Base\\provincial election.txt");
+				while (getline(in, line))
 				{
-					ifstream in("F:\\project oop\\Data Base\\pakistan union council.txt");
-					while (getline(in, line)) {
-						stringstream ss(line);
-						string col1, col2;
+					stringstream s(line);
+					string col1, col2, col3;
+					getline(s, col1, ',');
+					getline(s, col2, ',');
+					getline(s, col3, ',');
+					if (col1 == province)
+					{
+						if (col2 == district)
+						{
+							i++;
+							cout << i << ". " << col3 << endl;
+						}
+					}
+				}
+				in.close();
+				ifstream in8("F:\\project oop\\Data Base\\provincial election.txt");
+				cout << endl;
 
-						getline(ss, col1, ',');
-						getline(ss, col2, ',');
-
-						if (col1 == district) {
-							cout << index << ". " << col2 << endl;
-							index++;
+				int number;
+				i = 0;
+				while (true)
+				{
+					cout << "Enter PA # Index :";
+					do {
+						cin >> number;
+						if (number<0 || number > i)
+							cout << "Enter number between 1 and " << i << " : ";
+						else if (cin.fail())
+						{
+							cout << "Enter number between 1 and " << i << " : ";
+							cin.clear();
+							cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						}
+						else
+							break;
+					} while (true);
+					ifstream in("F:\\project oop\\Data Base\\provincial election.txt");
+					while (getline(in, line))
+					{
+						stringstream s(line);
+						string col1, col2, col3;
+						getline(s, col1, ',');
+						getline(s, col2, ',');
+						getline(s, col3, ',');
+						if (col2 == district)
+						{
+							i++;
+							if (i == number)
+								union_council = col3;
 						}
 					}
 					in.close();
+					break;
 				}
-				else if (province == "GILGIT-BALTISTAN") {
-					ifstream i("F:\\project oop\\Data Base\\GILGIT.txt");
-					while (getline(i, line))
-					{
-						stringstream s(line);
-						string col1, col2;
-						getline(s, col1, ',');
-						getline(s, col2, ',');
-						if (col1 == district)
-							cout << index << ". " << col2 << endl;index++;
-					}
-					i.close();
-				}
-				else {
-					ifstream i("F:\\project oop\\Data Base\\AJK.txt");
-					while (getline(i, line))
-					{
-						stringstream s(line);
-						string col1, col2;
-						getline(s, col1, ',');
-						getline(s, col2, ',');
-						if (col1 == district)
-							cout << index << col2 << endl;
-					}
-					i.close();
-				}
-				do {
-					if (province == "PUNJAB" || province == "SINDH" || province == "KHYBER PAKHTUNKHWA" || province == "BALOCHISTAN" || province == "FEDERAL CAPITAL TERRITORY")
-					{
-						cout << endl << "Enter City Name from the above list: ";
-						cin >> union_council;
+				in8.close();
 
-						for (int i = 0; i < union_council.length(); ++i) {
-							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
-								union_council[i] = union_council[i] - 'a' + 'A';
-							}
-						}
-						found = false;
-
-						ifstream in("F:\\project oop\\Data Base\\pakistan union council.txt");
-						while (getline(in, line)) {
-							stringstream ss(line);
-							string col1, col2, col3;
-
-							getline(ss, col1, ',');
-							getline(ss, col2, ',');
-
-							if (col2 == union_council) {
-								found = true;
-								break;
-							}
-						}
-						in.close();
-					}
-					else if (province == "GILGIT-BALTISTAN")
-					{
-						cout << endl << "Enter City Name from the above list: ";
-						cin >> union_council;
-
-						for (int i = 0; i < union_council.length(); ++i) {
-							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
-								union_council[i] = union_council[i] - 'a' + 'A';
-							}
-						}
-						found = false;
-
-						ifstream in("F:\\project oop\\Data Base\\GILGIT.txt");
-						while (getline(in, line)) {
-							stringstream ss(line);
-							string col1, col2;
-
-							getline(ss, col1, ',');
-							getline(ss, col2, ',');
-
-							if (col2 == union_council) {
-								found = true;
-								break;
-							}
-						}
-						in.close();
-					}
-					else
-					{
-						cout << endl << "Enter City Name from the above list: ";
-						cin >> union_council;
-
-						for (int i = 0; i < union_council.length(); ++i) {
-							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
-								union_council[i] = union_council[i] - 'a' + 'A';
-							}
-						}
-						found = false;
-
-						ifstream in("F:\\project oop\\Data Base\\AJK.txt");
-						while (getline(in, line)) {
-							stringstream ss(line);
-							string col1, col2, col3, col4, col5, col6;
-
-							getline(ss, col1, ',');
-							getline(ss, col2, ',');
-
-							if (col2 == union_council) {
-								found = true;
-								break;
-							}
-						}
-						in.close();
-					}
-					if (!found) {
-						cout << "\nUnion Council Not Found! Please try again.\n";
-					}
-				} while (!found);
-
-				ifstream in(candidate_file);
+				ifstream in9(party_file);
 				ofstream out("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt");
 				while (getline(in, line))
 				{
@@ -942,14 +812,15 @@ void LOCAL::modify_candidate()
 						out << line << endl;
 				}
 				out.close();
-				in.close();
+				in9.close();
 				remove(candidate_file.c_str());
 				rename("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt", candidate_file.c_str());
 			}
 		}
+	}
 }
 
-bool LOCAL::check_age(string a)
+bool PROVINCIAL::check_age(string a)
 {
 	ifstream in(Nadra_file);
 	while (getline(in, line)) {
@@ -972,7 +843,7 @@ bool LOCAL::check_age(string a)
 			localtime_r(&currentTime, &localTime);
 #endif
 			int d = (localTime.tm_year + 1900) - stoi(col2);
-			if (d >= 18)
+			if (d >= 25)
 				found = true;
 			else
 				found = false;
@@ -983,73 +854,70 @@ bool LOCAL::check_age(string a)
 	return found;
 }
 
-bool LOCAL::check_study(string a)
-{
+bool PROVINCIAL::check_dual_nationality(string a){
 	ifstream in(Nadra_file);
+	while (getline(in, line)) {
+		stringstream ss(line);
+		string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10,col11, col12, col13, col14;
 
-	while (getline(in,line))
+		getline(ss, col1, ',');
+		getline(ss, col2, ',');
+		getline(ss, col3, ',');
+		getline(ss, col4, ',');
+		getline(ss, col5, ',');
+		getline(ss, col6, ',');
+		getline(ss, col7, ',');
+		getline(ss, col8, ',');
+		getline(ss, col9, ',');
+		getline(ss, col10, ',');
+		getline(ss, col11, ',');
+		getline(ss, col12, ',');
+		getline(ss, col13, ',');
+		getline(ss, col14, ',');
+
+		if (col5 == a) {
+
+			int d = stoi(col14);
+			if (d == 1)
+				found = true;
+			else
+				found = false;
+			break;
+		}
+	}
+	in.close();
+	return found;
+}
+
+void PROVINCIAL::increment_vote(string a)
+{
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\provincial candidate database.txt";
+	party_file = "F:\\project oop\\Data Base\\PARTY\\PROVINCIAL PARTIES.txt";
+	string c, uni;
+	ifstream p1(user_file);
+	while (getline(p1, line))
 	{
 		stringstream s(line);
-		string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14, col15, col16;
+		string col1, col2, col3, col4;
 		getline(s, col1, ',');
 		getline(s, col2, ',');
 		getline(s, col3, ',');
 		getline(s, col4, ',');
-		getline(s, col5, ',');
-		getline(s, col6, ',');
-		getline(s, col7, ',');
-		getline(s, col8, ',');
-		getline(s, col9, ',');
-		getline(s, col10, ',');
-		getline(s, col11, ',');
-		getline(s, col12, ',');
-		getline(s, col13, ',');
-		getline(s, col14, ',');
-		getline(s, col15, ',');
-		getline(s, col16, ',');
-		if (col5 == a)
-		{
-			int d = stoi(col16);
-			if (d >= 10)
-				found = true;
-			else
-				found = false;
-			break;
-		}
-	}
-	in.close();
-	return found;
-}
-
-void LOCAL::increment_vote(string a)
-{
-	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
-	party_file = "F:\\project oop\\Data Base\\PARTY\\LOCAL PARTIES.txt";
-	user_file = "F:\\project oop\\Data Base\\login.txt";
-	string c,uni,dis,pro;
-	ifstream p1(user_file);
-	while (getline(p1,line))
-	{
-		stringstream s(line);
-		string col1, col2, col3;
-		getline(s, col1, ',');
-		getline(s, col2, ',');
-		getline(s, col3, ',');
 		if (col1 == a)
 		{
-			c = col3;
+			c = col4;
 			break;
 		}
 	}
 	p1.close();
 	if (c == "false")
 	{
-		int l = 0, k = 0,cho;
+		int l = 0, k = 0, cho;string j;
 		ifstream p2(Nadra_file);
 		while (getline(p2, line))
 		{
 			stringstream s(line);
-			string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11;
+			string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10;
 			getline(s, col1, ',');
 			getline(s, col2, ',');
 			getline(s, col3, ',');
@@ -1060,12 +928,9 @@ void LOCAL::increment_vote(string a)
 			getline(s, col8, ',');
 			getline(s, col9, ',');
 			getline(s, col10, ',');
-			getline(s, col11, ',');
 			if (col5 == a)
 			{
-				pro = col7;
-				dis = col8;
-				uni = col11;
+				uni = col10;
 				break;
 			}
 		}
@@ -1084,7 +949,7 @@ void LOCAL::increment_vote(string a)
 			getline(s, col5, ',');
 			getline(s, col6, ',');
 			getline(s, col7, ',');
-			if (col3==pro && col4== dis && col5==uni)
+			if (col5 == uni)
 			{
 				l++;
 				cout << l << ". " << col1 << "  Party: " << col6 << endl;
@@ -1107,9 +972,10 @@ void LOCAL::increment_vote(string a)
 			else
 				break;
 		}
-		
+
 		ifstream p4(candidate_file);
 		ofstream o1("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt");
+
 		while (getline(p4, line))
 		{
 			stringstream s(line);
@@ -1121,14 +987,14 @@ void LOCAL::increment_vote(string a)
 			getline(s, col5, ',');
 			getline(s, col6, ',');
 			getline(s, col7, ',');
-			if (col3 == pro && col4 == dis && col5 == uni)
+			if (col5 == uni)
 			{
 				k++;
 				if (k == cho)
 				{
 					int d = stoi(col7);
 					d++;
-					o1 << col1 <<"," << col2 << "," << col3 << "," << col4 << "," 
+					o1 << col1 << "," << col2 << "," << col3 << "," << col4 << ","
 						<< col5 << "," << col6 << "," << d << endl;
 				}
 				else
@@ -1142,55 +1008,42 @@ void LOCAL::increment_vote(string a)
 		remove(candidate_file.c_str());
 		rename("F:\\project oop\\Data Base\\CANDIDATE\\temp.txt", candidate_file.c_str());
 
-		
 		ifstream p5(user_file);
 		ofstream o2("F:\\project oop\\Data Base\\temp.txt");
 		while (getline(p5, line))
 		{
 			stringstream s(line);
-			string col1, col2, col3, col4, col5, col6;
+			string col1, col2, col3, col4, col5;
 			getline(s, col1, ',');
 			getline(s, col2, ',');
 			getline(s, col3, ',');
 			getline(s, col4, ',');
 			getline(s, col5, ',');
-			getline(s, col6, ',');
 			if (col1 == a)
 			{
-				o2 << col1 << "," << col2 << "," << "true" << "," << col4 << "," << col5 << "," << col6 << endl;
+				o2 << col1 << "," << col2 << "," << col3 << "," << "true" << "," << col5 << endl;
 			}
 			else
 				o2 << line << endl;
 		}
 		o2.close();
 		p5.close();
-
-		ofstream out12(user_file, ios::trunc);
-		out12.close();
-
-		ifstream p6("F:\\project oop\\Data Base\\temp.txt");
-		ofstream p7(user_file);
-		while (getline(p6, line))
-		{
-			p7 << line << endl;
-		}
-		p7.close();
-		p6.close();
-		remove("F:\\project oop\\Data Base\\temp.txt");
+		remove(user_file.c_str());
+		rename("F:\\project oop\\Data Base\\temp.txt", user_file.c_str());
 	}
 	else
 		cout << "You are already voted in Local.\n\n";
 }
 
-void LOCAL::create_election(string a)
+void PROVINCIAL::create_election(string a)
 {
 	string t = "F:\\project oop\\Data Base\\Election timings\\timings.txt";
-	
+
 	ifstream e1(t);
 	while (getline(e1, line))
 	{
 		stringstream s(line);
-		string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13, col14;
+		string col1, col2, col3, col4, col5, col6, col7, col8, col9, col10, col11, col12, col13;
 		getline(s, col1, ',');
 		getline(s, col2, ',');
 		getline(s, col3, ',');
@@ -1204,24 +1057,20 @@ void LOCAL::create_election(string a)
 		getline(s, col11, ',');
 		getline(s, col12, ',');
 		getline(s, col13, ',');
-		getline(s, col14, ',');
-		if (col1 == "local")
+		if (col1 == "provincial")
 		{
-			if (col2 == a)
-			{
-				start_year = stoi(col3);
-				start_month = stoi(col4);
-				start_day = stoi(col5);
-				start_hour = stoi(col6);
-				start_min = stoi(col7);
-				start_sec = stoi(col8);
-				end_year = stoi(col9);
-				end_month = stoi(col10);
-				end_day = stoi(col11);
-				end_hour = stoi(col12);
-				end_min = stoi(col13);
-				end_sec = stoi(col14);
-			}
+			start_year = stoi(col2);
+			start_month = stoi(col3);
+			start_day = stoi(col4);
+			start_hour = stoi(col5);
+			start_min = stoi(col6);
+			start_sec = stoi(col7);
+			end_year = stoi(col8);
+			end_month = stoi(col9);
+			end_day = stoi(col10);
+			end_hour = stoi(col11);
+			end_min = stoi(col12);
+			end_sec = stoi(col13);
 		}
 	}
 	e1.close();
@@ -1246,7 +1095,7 @@ void LOCAL::create_election(string a)
 					{
 						if (localTime.tm_sec >= start_sec && localTime.tm_sec <= end_sec)
 						{
-							cout << "Election is already started " << endl;
+							cout << "Provincial Election is already started !!!" << endl;
 							return;
 						}
 					}
@@ -1265,10 +1114,10 @@ void LOCAL::create_election(string a)
 		string col1, col2;
 		getline(s, col1, ',');
 		getline(s, col2, ',');
-		if (col2 == a)
+		if (col1 == "provincial")
 		{
-			e2 << col1 << "," << col2 << "," << start_year << "," << start_month << "," << start_day << "," 
-				<< start_hour << ","<< start_min << "," << start_sec << "," << end_year << "," << end_month 
+			e2 << col1 << "," << start_year << "," << start_month << "," << start_day << ","
+				<< start_hour << "," << start_min << "," << start_sec << "," << end_year << "," << end_month
 				<< "," << end_day << "," << end_hour << "," << end_min << "," << end_sec << endl;
 		}
 		else
@@ -1283,7 +1132,7 @@ void LOCAL::create_election(string a)
 
 	ifstream a2(user_file);
 	ofstream a3("F:\\project oop\\Data Base\\temp.txt");
-	while (getline(a2,line))
+	while (getline(a2, line))
 	{
 		stringstream s(line);
 		string col1, col2, col3, col4, col5, col6;
@@ -1293,14 +1142,11 @@ void LOCAL::create_election(string a)
 		getline(s, col4, ',');
 		getline(s, col5, ',');
 		getline(s, col6, ',');
-		if (col6 == a)
-			a3 << col1 << "," << col2 << "," << "false" << "," << col4 << "," << col5 << "," << col6 << endl;
-		else
-			a3 << line << endl;
+	
+		a3 << col1 << "," << col2 << "," << col3 << "," << "false" << "," << col5 << "," << col6 << endl;
 	}
 	a2.close();
 	a3.close();
-    
 
 	ofstream out12(user_file, ios::trunc);
 	out12.close();
@@ -1314,61 +1160,3 @@ void LOCAL::create_election(string a)
 	p8.close();
 	remove("F:\\project oop\\Data Base\\temp.txt");
 }
-
-void LOCAL::inter()
-{
-	int a;
-		while (true)
-		{
-			cout << "Province :" << endl
-				<< "1.PUNJAB" << endl
-				<< "2.SINDH" << endl
-				<< "3.KHYBER PAKHTUNKHWA" << endl
-				<< "4.BALOCHISTAN" << endl
-				<< "5.GILGIT-BALTISTAN" << endl
-				<< "6.AZAD JAMMU & KASHMIR" << endl
-				<< "7.FEDERAL CAPITAL TERRITORY" << endl;
-			cout << "Enter Province: ";
-			cin >> a;
-			if (cin.fail() || a > 7 || a < 1)
-			{
-				cin.clear();
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-				cout << "\nEnter again 1 to 7 !!!" << endl;
-			}
-			else
-				break;
-		}
-		if (a == 1)
-		{
-			province = "PUNJAB";
-		}
-		else if (a == 2)
-		{
-			province = "SINDH";
-		}
-		else if (a == 3)
-		{
-			province = "KHYBER PAKHTUNKHWA";
-		}
-		else if (a == 4)
-		{
-			province = "BALOCHISTAN";
-		}
-		else if (a == 5)
-		{
-			province = "GILGIT-BALTISTAN";
-		}
-		else if (a == 6)
-		{
-			province = "AZAD JAMMU & KASHMIR";
-		}
-		else
-		{
-			province = "FEDERAL CAPITAL TERRITORY";
-		}
-		create_election(province);
-		return;
-}
-
-

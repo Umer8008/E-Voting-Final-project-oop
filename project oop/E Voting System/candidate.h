@@ -13,11 +13,8 @@ protected:
 	int vote;
 	bool found = false, found2 = false;
 	string Nadra_file = "F:\\project oop\\Data Base\\nadra_database.txt";
+	string user_file = "F:\\project oop\\Data Base\\login.txt";
 public:
-	virtual void incrementvotes() = 0;
-	virtual string get_candidate() = 0;
-	virtual int get_vote_count() = 0;
-	virtual void set_candidate() = 0;
 	virtual bool check_age(string a) = 0;
 	bool check_pakistani(string a);
 };

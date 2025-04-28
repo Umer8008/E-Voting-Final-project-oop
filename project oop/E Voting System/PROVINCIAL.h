@@ -9,15 +9,16 @@
 
 using namespace std;
 
-class LOCAL:public ELECTION,public candidate
+class PROVINCIAL :public ELECTION, public candidate
 {
 public:
-	LOCAL()
-	{
-	   candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\local candidate database.txt";
-	   party_file = "F:\\project oop\\Data Base\\PARTY\\LOCAL PARTIES.txt";
-	}
+    PROVINCIAL()
+    {
+        candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\provincial candidate database.txt";
+        party_file = "F:\\project oop\\Data Base\\PARTY\\PROVINCIAL PARTIES.txt";
+    }
 protected:
+
     string punjabDistricts[38] = { "ATTOCK", "RAWALPINDI", "CHAKWAL", "JEHLUM", "GUJRAT", "SIALKOT", "NAROWAL"
 , "WAZIRABAD", "GUJRANWALA", "MANDI_BAHAUDIN", "HAFIZABAD", "SARGODHA", "KHUSHAB", "BHAKKAR"
 , "FAISALABAD", "TOBA_TEK_SINGH", "JHANG", "LAHORE", "SHEIKHUPURA", "KASUR", "OKARA", "PAKPATTAN"
@@ -56,15 +57,13 @@ protected:
         "MUZAFFARABAD","NEELUM","BAGH","POONCH","SUDHNATI",
         "KOTLI","MIRPUR","BHIMBER"
     };
-    string islamabadDistricts[1] = { "ISLAMABAD CAPITAL TERRITORY" };
+    string islamabadDistricts[1] = { "ISLAMABAD" };
 public:
-	void add_condidate () override;
-	void remove_condidate() override;
-	void modify_candidate() override;
-	bool check_age(string a)override;
-    bool check_study(string a);
+    void add_condidate() override;
+    void remove_condidate() override;
+    void modify_candidate() override;
+    bool check_age(string a)override;
+    bool check_dual_nationality(string a);
     void increment_vote(string a)override;
     void create_election(string a)override;
-    void inter();
 };
-
