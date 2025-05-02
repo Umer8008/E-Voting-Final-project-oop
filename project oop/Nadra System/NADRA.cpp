@@ -2,8 +2,10 @@
 #include<fstream>
 #include<iomanip>
 #include<sstream>
+#include<limits>
 #include<string>
 #include<ctime>
+#include<algorithm>
 #include <sstream>
 #include "NADRA.h"
 using namespace std;

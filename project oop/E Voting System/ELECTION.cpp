@@ -4,6 +4,7 @@
 #include<fstream>
 #include<iomanip>
 #include<ctime>
+#include<limits>
 
 using namespace std;
 

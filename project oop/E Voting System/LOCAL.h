@@ -4,6 +4,7 @@
 #include<fstream>
 #include<iomanip>
 #include<ctime>
+#include<limits>
 #include "ELECTION.h"
 #include"candidate.h"
 
@@ -67,5 +68,6 @@ public:
     void create_election(string a)override;
     void inter();
     void view_result(string a)override;
+    void admin_view_result() override;
 };
 

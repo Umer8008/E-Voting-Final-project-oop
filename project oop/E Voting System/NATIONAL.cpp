@@ -4,6 +4,7 @@
 #include<fstream>
 #include<iomanip>
 #include<ctime>
+#include<limits>
 #include "ELECTION.h"
 #include"candidate.h"
 
@@ -1328,4 +1329,336 @@ void NATIONAL::view_result(string a)
 	}
 	else
 		cout << "Not any candidate stand in the " << ab << " !!!" << endl;
+}
+
+void NATIONAL::admin_view_result()
+{
+	candidate_file = "F:\\project oop\\Data Base\\CANDIDATE\\national candidate database.txt";
+	party_file = "F:\\project oop\\Data Base\\PARTY\\NATIONAL PARTIES.txt";
+
+	cout<<endl<<"Local View Result \n"<<endl;
+
+    //province
+	int a;
+	while (true) {
+		while (true)
+		{
+			cout << "Province :" << endl
+				<< "1.PUNJAB" << endl
+				<< "2.SINDH" << endl
+				<< "3.KHYBER PAKHTUNKHWA" << endl
+				<< "4.BALOCHISTAN" << endl
+				<< "5.GILGIT-BALTISTAN" << endl
+				<< "6.AZAD JAMMU & KASHMIR" << endl
+				<< "7.FEDERAL CAPITAL TERRITORY" << endl;
+			cout << "Enter Province: ";
+			cin >> a;
+			if (cin.fail() || a > 7 || a < 1)
+			{
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				cout << "\nEnter again 1 to 7 !!!" << endl;
+			}
+			else
+				break;
+		}
+		if (a == 1)
+		{
+			province = "PUNJAB";break;
+		}
+		else if (a == 2)
+		{
+			province = "SINDH";break;
+		}
+		else if (a == 3)
+		{
+			province = "KHYBER PAKHTUNKHWA";break;
+		}
+		else if (a == 4)
+		{
+			province = "BALOCHISTAN";break;
+		}
+		else if (a == 5)
+		{
+			province = "GILGIT-BALTISTAN";break;
+		}
+		else if (a == 6)
+		{
+			province = "AZAD JAMMU & KASHMIR";break;
+		}
+		else
+		{
+			province = "FEDERAL CAPITAL TERRITORY";break;
+		}
+		break;
+	}
+
+	//district
+	bool validDistrict = false;
+	while (!validDistrict) {
+					cout << "\nProvince " << province << " of Districts :\n" << endl;
+					if (province == "PUNJAB") {
+						for (int i = 0;i < 38;i++)
+						{
+							cout << i + 1 << "." << punjabDistricts[i] << endl;
+						}
+					}
+					else if (province == "SINDH") {
+						for (int i = 0;i < 31;i++)
+						{
+							cout << i + 1 << "." << sindhDistricts[i] << endl;
+						}
+					}
+					else if (province == "KHYBER PAKHTUNKHWA") {
+						for (int i = 0;i < 26;i++)
+						{
+							cout << i + 1 << "." << kpkDistricts[i] << endl;
+						}
+					}
+					else if (province == "BALOCHISTAN") {
+						for (int i = 0;i < 36;i++)
+						{
+							cout << i + 1 << "." << balochistanDistricts[i] << endl;
+						}
+					}
+					else if (province == "GILGIT-BALTISTAN") {
+						for (int i = 0;i < 4;i++)
+						{
+							cout << i + 1 << "." << gilgitBaltistanDistricts[i] << endl;
+						}
+					}
+					else if (province == "AZAD JAMMU & KASHMIR") {
+						for (int i = 0;i < 8;i++)
+						{
+							cout << i + 1 << "." << ajkDistricts[i] << endl;
+						}
+					}
+					else if (province == "FEDERAL CAPITAL TERRITORY") {
+						cout << "1.ISLAMABAD CAPITAL TERRITORY" << endl;
+					}
+					cout << "Enter District: ";
+					cin.ignore(); 
+					getline(cin, district); 
+
+					for (int i = 0; i < district.length(); ++i) {
+						if (district[i] >= 'a' && district[i] <= 'z') {
+							district[i] = district[i] - 'a' + 'A';
+						}
+					}
+
+					if (province == "PUNJAB") {
+						for (int i = 0; i < sizeof(punjabDistricts) / sizeof(punjabDistricts[0]); ++i) {
+							if (district == punjabDistricts[i]) {
+								validDistrict = true;
+								break;
+							}
+						}
+					}
+					else if (province == "SINDH") {
+						for (int i = 0; i < sizeof(sindhDistricts) / sizeof(sindhDistricts[0]); ++i) {
+							if (district == sindhDistricts[i]) {
+								validDistrict = true;
+								break;
+							}
+						}
+					}
+					else if (province == "KHYBER PAKHTUNKHWA") {
+						for (int i = 0; i < sizeof(kpkDistricts) / sizeof(kpkDistricts[0]); ++i) {
+							if (district == kpkDistricts[i]) {
+								validDistrict = true;
+								break;
+							}
+						}
+					}
+					else if (province == "BALOCHISTAN") {
+						for (int i = 0; i < sizeof(balochistanDistricts) / sizeof(balochistanDistricts[0]); ++i) {
+							if (district == balochistanDistricts[i]) {
+								validDistrict = true;
+								break;
+							}
+						}
+					}
+					else if (province == "GILGIT-BALTISTAN") {
+						for (int i = 0; i < sizeof(gilgitBaltistanDistricts) / sizeof(gilgitBaltistanDistricts[0]); ++i) {
+							if (district == gilgitBaltistanDistricts[i]) {
+								validDistrict = true;
+								break;
+							}
+						}
+					}
+					else if (province == "AZAD JAMMU & KASHMIR") {
+						for (int i = 0; i < sizeof(ajkDistricts) / sizeof(ajkDistricts[0]); ++i) {
+							if (district == ajkDistricts[i]) {
+								validDistrict = true;
+							}
+						}
+					}
+					else if (province == "FEDERAL CAPITAL TERRITORY") {
+						if (district == "ISLAMABAD CAPITAL TERRITORY") {
+							validDistrict = true;
+						}
+					}
+
+					if ( !validDistrict) {
+						cout << "Invalid district for the selected province. Please try again.\n" << endl;
+					}
+				}
+
+	//union council
+	int index = 1;
+	cout << "\t!!! City of " << district << "!!!\n";
+	if (province == "PUNJAB" || province == "SINDH" || province == "KHYBER PAKHTUNKHWA"
+		|| province == "BALOCHISTAN" || province == "FEDERAL CAPITAL TERRITORY")
+				{
+					ifstream in("F:\\project oop\\Data Base\\pakistan union council.txt");
+					while (getline(in, line)) {
+						stringstream ss(line);
+						string col1, col2;
+
+						getline(ss, col1, ',');
+						getline(ss, col2, ',');
+
+						if (col1 == district) {
+							cout << index << ". " << col2 << endl;
+							index++;
+						}
+					}
+					in.close();
+				}
+	else if (province == "GILGIT-BALTISTAN") {
+					ifstream i("F:\\project oop\\Data Base\\GILGIT.txt");
+					while (getline(i, line))
+					{
+						stringstream s(line);
+						string col1, col2;
+						getline(s, col1, ',');
+						getline(s, col2, ',');
+						if (col1 == district)
+							cout << index << ". " << col2 << endl;index++;
+					}
+					i.close();
+				}
+	else {
+					ifstream i("F:\\project oop\\Data Base\\AJK.txt");
+					while (getline(i, line))
+					{
+						stringstream s(line);
+						string col1, col2;
+						getline(s, col1, ',');
+						getline(s, col2, ',');
+						if (col1 == district)
+							cout << index << col2 << endl;
+					}
+					i.close();
+				}
+	do {
+					if (province == "PUNJAB" || province == "SINDH" || province == "KHYBER PAKHTUNKHWA" || province == "BALOCHISTAN" || province == "FEDERAL CAPITAL TERRITORY")
+					{
+						cout << endl << "Enter City Name from the above list: ";
+						cin >> union_council;
+
+						for (int i = 0; i < union_council.length(); ++i) {
+							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
+								union_council[i] = union_council[i] - 'a' + 'A';
+							}
+						}
+						found = false;
+
+						ifstream in("F:\\project oop\\Data Base\\pakistan union council.txt");
+						while (getline(in, line)) {
+							stringstream ss(line);
+							string col1, col2, col3;
+
+							getline(ss, col1, ',');
+							getline(ss, col2, ',');
+
+							if (col2 == union_council) {
+								found = true;
+								break;
+							}
+						}
+						in.close();
+					}
+					else if (province == "GILGIT-BALTISTAN")
+					{
+						cout << endl << "Enter City Name from the above list: ";
+						cin >> union_council;
+
+						for (int i = 0; i < union_council.length(); ++i) {
+							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
+								union_council[i] = union_council[i] - 'a' + 'A';
+							}
+						}
+						found = false;
+
+						ifstream in("F:\\project oop\\Data Base\\GILGIT.txt");
+						while (getline(in, line)) {
+							stringstream ss(line);
+							string col1, col2;
+
+							getline(ss, col1, ',');
+							getline(ss, col2, ',');
+
+							if (col2 == union_council) {
+								found = true;
+								break;
+							}
+						}
+						in.close();
+					}
+					else
+					{
+						cout << endl << "Enter City Name from the above list: ";
+						cin >> union_council;
+
+						for (int i = 0; i < union_council.length(); ++i) {
+							if (union_council[i] >= 'a' && union_council[i] <= 'z') {
+								union_council[i] = union_council[i] - 'a' + 'A';
+							}
+						}
+						found = false;
+
+						ifstream in("F:\\project oop\\Data Base\\AJK.txt");
+						while (getline(in, line)) {
+							stringstream ss(line);
+							string col1, col2, col3, col4, col5, col6;
+
+							getline(ss, col1, ',');
+							getline(ss, col2, ',');
+
+							if (col2 == union_council) {
+								found = true;
+								break;
+							}
+						}
+						in.close();
+					}
+					if (!found) {
+						cout << "\nUnion Council Not Found! Please try again.\n";
+					}
+	} while (!found);
+
+    cout<< province <<" :"<<endl;
+	ifstream y1(candidate_file);
+    while(getline(y1,line))
+	{
+		stringstream s(line);
+		string col1,col2,col3,col4,col5,col6,col7;
+		getline ( s , col1 , ',');
+		getline ( s , col2 , ',');
+		getline ( s , col3 , ',');
+		getline ( s , col4 , ',');
+		getline ( s , col5 , ',');
+		getline ( s , col6 , ',');
+		getline ( s , col7 , ',');
+		if(col3 == province)
+		{
+			if(col4==district)
+			{
+				if(col5==union_council)
+                    cout<<col1<<col4<<col5<<col6<<col7<<endl;
+			}
+		}
+	}
+	y1.close();
 }

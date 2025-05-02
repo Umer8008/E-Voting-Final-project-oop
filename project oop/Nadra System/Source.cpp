@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include "NADRA.h"
+#include <limits>
+#include <algorithm>
 using namespace std;
 
 int main() {

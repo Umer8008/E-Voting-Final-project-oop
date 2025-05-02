@@ -205,7 +205,49 @@ void ADMINISTRATOR::modify_candidate()
 
 void ADMINISTRATOR::view_results()
 {
-	
+	while (true) {
+		cout << "\tView Result\n";
+		cout << "1. Local Candidate\n";
+		cout << "2. Provincial Candidate\n";
+		cout << "3. National Candidate\n";
+		cout << "4. Exit\n";
+		cout << "Enter Choice :";
+		while (true) {
+			cin >> choice;
+			if (cin.fail())
+			{
+				cin.clear();
+				cin.ignore(1000, '\n');
+				cout << "Enter number between 1 and 4 :";
+			}
+			else if (choice > 4 || choice < 1)
+				cout << "Enter number between 1 and 4 :";
+			else
+				break;
+		}
+
+		ELECTION* e;
+		if (choice == 1)
+		{
+			LOCAL l;
+			e = &l;
+			e->admin_view_result();
+		}
+		else if (choice == 2)
+		{
+			PROVINCIAL l;
+			e = &l;
+			e->admin_view_result();
+		}
+		else if (choice == 3)
+		{
+			NATIONAL l;
+			e = &l;
+			e->admin_view_result();
+		}
+		else
+			return;
+	}
 }
 
 void ADMINISTRATOR::create_election()

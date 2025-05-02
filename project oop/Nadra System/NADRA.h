@@ -2,6 +2,8 @@
 #include <iostream>
 #include<fstream>
 #include<iomanip>
+#include<limits>
+#include<algorithm>
 #include<sstream>
 #include<string>
 using namespace std;
